@@ -1,0 +1,30 @@
+version: '3'
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: node_modules/.bin/nodemon --exec npm start
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_HOST=mysql
+      - DATABASE_USER=test
+      - DATABASE_PASSWORD=test
+      - DATABASE_DB=test
+    links: 
+      - mysql
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/app/test
+      - /home/app/test/node_modules
+  mysql: 
+    image: "mysql:5.7"
+    environment:
+      - MYSQL_DATABASE=test
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+    ports:
+      - 3306:3306
