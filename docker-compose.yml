@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3'
 services:
   test:
     build:
@@ -15,8 +15,7 @@ services:
     links: 
       - mysql
     depends_on: 
-      mysql:
-        condition: service_healthy
+      - mysql
     ports:
       - 3000:3000
     volumes:
@@ -24,6 +23,11 @@ services:
       - /home/app/test/node_modules
   mysql: 
     image: "mysql:5.7"
+    healthcheck:
+      test: "nc -z localhost 3306"
+      interval: 5s
+      timeout: 5s
+      retries: 60
     environment:
       - MYSQL_DATABASE=test
       - MYSQL_ROOT_PASSWORD=root
