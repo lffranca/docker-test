@@ -3,7 +3,7 @@ services:
   test:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: app.dockerfile
     command: node_modules/.bin/nodemon --exec npm start
     environment:
       - NODE_ENV=development
@@ -12,26 +12,29 @@ services:
       - DATABASE_USER=test
       - DATABASE_PASSWORD=test
       - DATABASE_DB=test
-    links: 
+    links:
       - mysql
-    depends_on: 
+    depends_on:
       - mysql
     ports:
       - 3000:3000
     volumes:
       - .:/home/app/test
       - /home/app/test/node_modules
-  mysql: 
-    image: "mysql:5.7"
+  mysql:
+    build:
+      context: .
+      dockerfile: mysql.dockerfile
+    # image: "mysql:5.7"
     healthcheck:
       test: "nc -z localhost 3306"
       interval: 5s
       timeout: 5s
       retries: 60
-    environment:
-      - MYSQL_DATABASE=test
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=test
-      - MYSQL_PASSWORD=test
+    # environment:
+    #   - MYSQL_DATABASE=test
+    #   - MYSQL_ROOT_PASSWORD=root
+    #   - MYSQL_USER=test
+    #   - MYSQL_PASSWORD=test
     ports:
       - 3306:3306
